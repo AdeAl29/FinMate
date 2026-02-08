@@ -5,6 +5,9 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+  // When using PgBouncer/connection pooling in serverless, use DATABASE_URL for runtime,
+  // and DIRECT_URL for migrations/DDL (direct connection).
+  directUrl = env("DIRECT_URL")
 }
 
 enum TransactionType {

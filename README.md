@@ -66,6 +66,7 @@ Copy `.env.example` to `.env` and set values:
 
 ```env
 DATABASE_URL="postgresql://..."
+DIRECT_URL="postgresql://..."
 JWT_SECRET="your-random-secret"
 ```
 
@@ -128,5 +129,13 @@ Open `http://localhost:3000`.
 ## Deployment Notes
 
 - Works on Vercel/Node environments with PostgreSQL.
-- Set `DATABASE_URL` and `JWT_SECRET` in deployment environment variables.
+- Set `DATABASE_URL`, `DIRECT_URL`, and `JWT_SECRET` in deployment environment variables.
 - Run migrations during deployment (`npm run prisma:migrate`) before first production start.
+
+### Supabase + Vercel
+
+If you deploy to Vercel and use Supabase Postgres, prefer **Connection Pooling (Transaction pooler)** for `DATABASE_URL`
+to avoid IPv6-only `db.<ref>.supabase.co` connectivity issues in some serverless environments.
+
+- `DATABASE_URL`: Supabase **Transaction pooler** URI (port usually `6543`, host `*.pooler.supabase.com`)
+- `DIRECT_URL`: Supabase **Direct connection** URI (port `5432`, host `db.<ref>.supabase.co`)
