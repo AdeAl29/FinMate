@@ -63,6 +63,15 @@ const dictionary = {
     details: "Details",
     edit: "Edit",
     delete: "Delete",
+    install_app: "Install App",
+    install_app_desc: "Install Student Finance Tracker on your phone for app-like access.",
+    install_now: "Install Now",
+    app_installed: "App is installed",
+    install_unavailable: "Install prompt is not available on this device/browser yet.",
+    ios_install_hint:
+      "On iPhone/iPad: open this page in Safari, tap Share, then choose Add to Home Screen.",
+    install_success: "App installed successfully",
+    install_cancelled: "Install cancelled",
   },
   ID: {
     nav_dashboard: "Beranda",
@@ -126,6 +135,16 @@ const dictionary = {
     details: "Detail",
     edit: "Ubah",
     delete: "Hapus",
+    install_app: "Install Aplikasi",
+    install_app_desc:
+      "Install Student Finance Tracker di HP kamu agar bisa dipakai seperti aplikasi.",
+    install_now: "Install Sekarang",
+    app_installed: "Aplikasi sudah terpasang",
+    install_unavailable: "Prompt install belum tersedia di perangkat/browser ini.",
+    ios_install_hint:
+      "Di iPhone/iPad: buka halaman ini di Safari, tekan Share, lalu pilih Add to Home Screen.",
+    install_success: "Aplikasi berhasil di-install",
+    install_cancelled: "Install dibatalkan",
   },
 } as const;
 

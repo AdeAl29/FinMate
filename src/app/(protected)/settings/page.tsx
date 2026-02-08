@@ -1,7 +1,7 @@
 "use client";
 
 import { FormEvent, useEffect, useState } from "react";
-import { LogOut } from "lucide-react";
+import { Download, LogOut } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { CategoryManager } from "@/components/categories/category-manager";
@@ -12,6 +12,7 @@ import { Input } from "@/components/ui/input";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { Select } from "@/components/ui/select";
 import { useAuth } from "@/context/auth-context";
+import { usePwaInstall } from "@/context/pwa-install-context";
 import { useI18n } from "@/hooks/use-i18n";
 import { apiGet, apiSend } from "@/lib/client-api";
 import { SUPPORTED_CURRENCIES, SUPPORTED_LANGUAGES } from "@/lib/constants";
@@ -35,6 +36,7 @@ type UserPayload = {
 export default function SettingsPage() {
   const router = useRouter();
   const { user, applyUser, logout } = useAuth();
+  const { canInstall, isInstalled, isIos, isStandalone, promptInstall } = usePwaInstall();
   const { t } = useI18n();
   const [profile, setProfile] = useState({
     username: "",
@@ -122,6 +124,22 @@ export default function SettingsPage() {
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Unable to logout");
     }
+  }
+
+  async function handleInstallApp() {
+    const result = await promptInstall();
+
+    if (result === "accepted") {
+      toast.success(t("install_success"));
+      return;
+    }
+
+    if (result === "dismissed") {
+      toast.error(t("install_cancelled"));
+      return;
+    }
+
+    toast.error(t("install_unavailable"));
   }
 
   async function createCategory(name: string) {
@@ -270,6 +288,32 @@ export default function SettingsPage() {
             {t("update_password")}
           </Button>
         </form>
+      </Card>
+
+      <Card className="space-y-3">
+        <h3 className="text-sm font-semibold text-slate-700 dark:text-slate-200">
+          {t("install_app")}
+        </h3>
+        <p className="text-xs text-slate-500 dark:text-slate-300">{t("install_app_desc")}</p>
+
+        {isInstalled || isStandalone ? (
+          <p className="rounded-xl bg-emerald-50 px-3 py-2 text-xs font-medium text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300">
+            {t("app_installed")}
+          </p>
+        ) : canInstall ? (
+          <Button onClick={handleInstallApp}>
+            <Download className="mr-2 h-4 w-4" />
+            {t("install_now")}
+          </Button>
+        ) : isIos ? (
+          <p className="rounded-xl bg-sky-50 px-3 py-2 text-xs text-sky-700 dark:bg-sky-900/30 dark:text-sky-300">
+            {t("ios_install_hint")}
+          </p>
+        ) : (
+          <p className="rounded-xl bg-amber-50 px-3 py-2 text-xs text-amber-700 dark:bg-amber-900/30 dark:text-amber-300">
+            {t("install_unavailable")}
+          </p>
+        )}
       </Card>
 
       <Card className="space-y-2">
